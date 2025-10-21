@@ -18,13 +18,46 @@ st.sidebar.title("📊 Navigation")
 page = st.sidebar.radio("Go to:", ["🏠 Home", "📈 Data Analysis", "🤖 Prediction System"])
 
 
+import streamlit as st
+import pandas as pd
+from pathlib import Path
+
+import os
+import pandas as pd
+import streamlit as st
+
+# Define the CSV path
+csv_path = r"C:\Users\Emmanuel\Desktop\Student_App\student_performance_200.csv"
+
+# Safe CSV loading function
+def safe_read_csv(path):
+    try:
+        df = pd.read_csv(path)
+        st.success("✅ Student performance data loaded successfully!")
+        return df
+    except FileNotFoundError:
+        st.warning(f"⚠️ File not found at: {path}")
+        st.info("Please upload the CSV file below or check your file path.")
+        
+        # Let user upload file manually
+        uploaded_file = st.file_uploader("Upload student_performance_200.csv", type=["csv"])
+        if uploaded_file is not None:
+            df = pd.read_csv(uploaded_file)
+            st.success("✅ File uploaded successfully!")
+            return df
+        else:
+            st.stop()  # Stop app until file is available
+    except Exception as e:
+        st.error(f"❌ An unexpected error occurred: {e}")
+        st.stop()
+
+# Load data safely
+df = safe_read_csv(csv_path)
 
 
-# FILE UPLOAD
 
 purple_palette = ["#7B61FF", "#B388FF", "#4C2BFF", "#9F7BFF", "#6F4BFF"]
-file_path = r"C:\Users\Emmanuel\Downloads\student_performance_200.csv"
-df = pd.read_csv(file_path)
+
 st.sidebar.markdown("---")
 st.sidebar.info("Developed by: *Splendid Emmanuel*")
 st.sidebar.caption("SIWES Presentation Project 2025")
